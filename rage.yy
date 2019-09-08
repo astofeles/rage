@@ -2,10 +2,18 @@
 	
 %}
 
+
+
 %%
 
-[0-9]+	printf("That's a number\n");
-[A-Za-z]+	printf("That's a word\n");
+[[:blank:]]	/* consume blanks */
+"recebe"	printf("Atribuicao\n");
+[[:digit:]]+	printf("%s:That's a number\n", yytext);
+[[:alpha:]]+	printf("%s:That's a word\n", yytext);
+[[:punct:]]	printf("%s:That's a punctuation\n", yytext);
+
+
+.	printf("wtf?\n");
 
 %%
 
