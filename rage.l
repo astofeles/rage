@@ -34,6 +34,7 @@ PNT	";"|","|":"
 [[:blank:]]	/* consume blanks */
 {TYP}	printf("%s : datatype\n", yytext);
 {LOP} 	printf("%s : logicop\n", yytext);
+{LOOP}	printf("%s : loop operations\n", yytext);
 {BVAL}	printf("%s : boolean\n", yytext);
 {ID}	printf("%s : identificator\n", yytext);
 {STR}	printf("%s : string\n", yytext);
@@ -44,10 +45,10 @@ PNT	";"|","|":"
 {ATR}	printf("%s : atribution\n", yytext);
 {AOP}	printf("%s : arithmetics\n", yytext);
 {COP}	printf("%s : comparison\n", yytext);
-{BLOC}	printf("%s : bloccontrol\n",yytext);
-{PNT}	printf("%s : pontiation\n",yytext);
+{BLOC}	printf("%s : bloccontrol\n", yytext);
+{PNT}	printf("%s : pontiation\n", yytext);
 
-.	printf("wtf?\n");
+.	printf("%s : wtf?\n", yytext);
 
 %%
 

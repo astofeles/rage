@@ -876,17 +876,17 @@ printf("%s : comparison\n", yytext);
 case 14:
 YY_RULE_SETUP
 #line 47 "rage.l"
-printf("%s : bloccontrol\n",yytext);
+printf("%s : bloccontrol\n", yytext);
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
 #line 48 "rage.l"
-printf("%s : pontiation\n",yytext);
+printf("%s : pontiation\n", yytext);
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
 #line 50 "rage.l"
-printf("wtf?\n");
+printf("%s : wtf?\n", yytext);
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
