@@ -1,7 +1,9 @@
 %{
 	#include <math.h>	
+	#include <string.h>
+	int nlin=1;
+	int ncol=1;
 %}
-
 /* Reserved words */
 LOP	(?i:and)|(?i:or)|(?i:not)|(?i:nand)|(?i:nor)|(?i:xor)
 TRU	(?i:t(rue)?)
@@ -31,24 +33,26 @@ PNT	";"|","|":"
 
 %%
 
-[[:blank:]]	/* consume blanks */
-{TYP}	printf("%s : datatype\n", yytext);
-{LOP} 	printf("%s : logicop\n", yytext);
-{LOOP}	printf("%s : loop operations\n", yytext);
-{BVAL}	printf("%s : boolean\n", yytext);
-{ID}	printf("%s : identificator\n", yytext);
-{STR}	printf("%s : string\n", yytext);
-{INUM}	printf("%s : integer\n", yytext);
-{FNUM}	printf("%s : float\n", yytext);
-{HNUM}	printf("%s : hexdecimal\n", yytext);
-{ONUM}	printf("%s : octal\n", yytext);
-{ATR}	printf("%s : atribution\n", yytext);
-{AOP}	printf("%s : arithmetics\n", yytext);
-{COP}	printf("%s : comparison\n", yytext);
-{BLOC}	printf("%s : bloccontrol\n", yytext);
-{PNT}	printf("%s : pontiation\n", yytext);
+[\n]	{ nlin++; ncol=1; }
+[[:blank:]]	{ ncol++; }
+{TYP}	{ ncol += strlen(yytext); printf("%s : datatype\n", yytext); }
+{LOP} 	{ ncol += strlen(yytext); printf("%s : logicop\n", yytext); }
+{LOOP}	{ ncol += strlen(yytext); printf("%s : loop operations\n", yytext); }
+{BVAL}	{ ncol += strlen(yytext); printf("%s : boolean\n", yytext); }
+{LAB}	{ ncol += strlen(yytext); printf("%s : label\n", yytext); }
+{ID}	{ ncol += strlen(yytext); printf("%s : identificator\n", yytext); }
+{STR}	{ ncol += strlen(yytext); printf("%s : string\n", yytext); }
+{INUM}	{ ncol += strlen(yytext); printf("%s : integer\n", yytext); }
+{FNUM}	{ ncol += strlen(yytext); printf("%s : float\n", yytext); }
+{HNUM}	{ ncol += strlen(yytext); printf("%s : hexdecimal\n", yytext); }
+{ONUM}	{ ncol += strlen(yytext); printf("%s : octal\n", yytext); }
+{ATR}	{ ncol += strlen(yytext); printf("%s : atribution\n", yytext); }
+{AOP}	{ ncol += strlen(yytext); printf("%s : arithmetics\n", yytext); }
+{COP}	{ ncol += strlen(yytext); printf("%s : comparison\n", yytext); }
+{BLOC}	{ ncol += strlen(yytext); printf("%s : block control\n", yytext); }
+{PNT}	{ ncol += strlen(yytext); printf("%s : punctiation\n", yytext); }
 
-.	printf("%s : wtf?\n", yytext);
+.	{ printf("Error on line %d, column %d: %s not identified.\n", nlin, ncol, yytext); }
 
 %%
 
