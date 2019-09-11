@@ -52,11 +52,22 @@ PNT	";"|","|":"
 {BLOC}	{ ncol += strlen(yytext); printf("%s : block control\n", yytext); }
 {PNT}	{ ncol += strlen(yytext); printf("%s : punctiation\n", yytext); }
 
-.	{ printf("Error on line %d, column %d: %s not identified.\n", nlin, ncol, yytext); }
+.	{ printf("Error on line %d, column %d: \'%s\' is not a valid token.\n", nlin, ncol, yytext); }
 
 %%
 
 int yywrap() { }
-int main() {
+int main(int argc, char const *argv[]) {
+	argv++; argc--;
+	if (argc == 0)
+		yyin = stdin;
+	else {
+		yyin = fopen(*argv, "r");
+		if (yyin == NULL) {
+			printf(":: %s not found, using as interpreter ::\n\n", *argv);
+			yyin = stdin;
+		}
+	}
 	yylex();
 }
+

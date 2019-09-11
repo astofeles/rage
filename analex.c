@@ -927,7 +927,7 @@ YY_RULE_SETUP
 case 19:
 YY_RULE_SETUP
 #line 55 "rage.l"
-{ printf("Error on line %d, column %d: %s not identified.\n", nlin, ncol, yytext); }
+{ printf("Error on line %d, column %d: \'%s\' is not a valid token.\n", nlin, ncol, yytext); }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
@@ -1943,7 +1943,18 @@ void yyfree (void * ptr )
 
 
 int yywrap() { }
-int main() {
+int main(int argc, char const *argv[]) {
+	argv++; argc--;
+	if (argc == 0)
+		yyin = stdin;
+	else {
+		yyin = fopen(*argv, "r");
+		if (yyin == NULL) {
+			printf(":: %s not found, using as interpreter ::\n\n", *argv);
+			yyin = stdin;
+		}
+	}
 	yylex();
 }
+
 
