@@ -4,6 +4,7 @@
 	int nlin=1;
 	int ncol=1;
 %}
+
 /* Reserved words */
 LOP	(?i:and)|(?i:or)|(?i:not)|(?i:nand)|(?i:nor)|(?i:xor)
 TRU	(?i:t(rue)?)
@@ -13,6 +14,7 @@ CND	(?i:if)|(?i:else)|(?i:switch)|(?i:case)
 LOOP	(?i:for)|(?i:while)|(?i:do)|(?i:until)
 GOTO	(?i:goto)
 TYP	(?i:int)|(?i:char)|(?i:string)|(?i:float)|(?i:double)
+
 /* Numbers */
 DDIG	([0-9])
 HDIG	(?i:[0-9a-f])
@@ -21,6 +23,7 @@ INUM	{DDIG}|[1-9]{DDIG}*
 FNUM	{INUM}(?i:f)?|{INUM}?"."{INUM}(?i:f)?
 HNUM	(?i:0x){HDIG}+ 
 ONUM	"0"{ODIG}+
+
 /* Variables, lables and stuff */
 ID	(?i:[_a-z][_a-z0-9]*)
 LAB	{ID}":" 
@@ -30,6 +33,9 @@ AOP	"+"|"-"|"*"|"/"|"^"|"%"
 COP	">="|"<="|"=="|"!="|">"|"<"
 BLOC 	"("|")"|"["|"]"|"{"|"}"
 PNT	";"|","|":"
+
+
+COMM ("//".*)
 
 %%
 
@@ -51,6 +57,7 @@ PNT	";"|","|":"
 {COP}	{ ncol += strlen(yytext); printf("%s : comparison\n", yytext); }
 {BLOC}	{ ncol += strlen(yytext); printf("%s : block control\n", yytext); }
 {PNT}	{ ncol += strlen(yytext); printf("%s : punctiation\n", yytext); }
+{COMM}  { ncol += strlen(yytext); printf("%s : comentario\n", yytext);}
 
 .	{ printf("Error on line %d, column %d: \'%s\' is not a valid token.\n", nlin, ncol, yytext); }
 
