@@ -1,9 +1,12 @@
 %{
 	#include <math.h>	
 	#include <string.h>
-	int nlin=1;
-	int ncol=1;
+	int nlin=1;	// the line counter
+	int ncol=1;	// the column counter
 %}
+
+/* NOTE: rage works with all words being casae insensitive, therefore, all alphabetic definitions
+ * uses (?i: ... ) to denote that the definition is case insensitive */
 
 /* Reserved words */
 LOP	(?i:and)|(?i:or)|(?i:not)|(?i:nand)|(?i:nor)|(?i:xor)
@@ -23,8 +26,9 @@ INUM	{DDIG}|[1-9]{DDIG}*
 FNUM	{INUM}(?i:f)?|{INUM}?"."{INUM}(?i:f)?
 HNUM	(?i:0x){HDIG}+ 
 ONUM	"0"{ODIG}+
+NUM	{ONUM}|{HNUM}|{INUM}|{FNUM}
 
-/* Variables, lables and stuff */
+/* Variables, lables, operators and stuff */
 ID	(?i:[_a-z][_a-z0-9]*)
 LAB	{ID}":" 
 STR	(["][^"]*["])
@@ -35,7 +39,7 @@ BLOC 	"("|")"|"["|"]"|"{"|"}"
 PNT	";"|","|":"
 
 
-COMM ("//".*)
+COMM ("//".*)|("/*"(.*)"*/")
 
 %%
 
@@ -57,13 +61,16 @@ COMM ("//".*)
 {COP}	{ ncol += strlen(yytext); printf("%s : comparison\n", yytext); }
 {BLOC}	{ ncol += strlen(yytext); printf("%s : block control\n", yytext); }
 {PNT}	{ ncol += strlen(yytext); printf("%s : punctiation\n", yytext); }
-{COMM}  { ncol += strlen(yytext); printf("%s : comentario\n", yytext);}
+{COMM}  { ncol += strlen(yytext); printf("%s : comment\n", yytext);}
 
-.	{ printf("Error on line %d, column %d: \'%s\' is not a valid token.\n", nlin, ncol, yytext); }
+.+	{ printf("Error on line %d, column %d: \'%s\' is not a valid token.\n", nlin, ncol, yytext); }
 
 %%
 
+/* default function to wrap the token read */
 int yywrap() { }
+/* if no parameter is given, or the parameter gives a file not found, then the rage works as an interpreter.
+ * Otherwise, rage lexicly analyse the file of the first parameter */
 int main(int argc, char const *argv[]) {
 	argv++; argc--;
 	if (argc == 0)
