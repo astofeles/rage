@@ -1,5 +1,19 @@
 # rage
-Really? Another languaGE?
+*R*eally? *A*nother languai*GE*?
+
+## Goal
+The main goal of RAGE is in its development, one it is used as part of a college computing science work to learn about compilers.
+
+It also has as goal be an easy ditadic algorithm learning language, providing really usefull easy opetors and constructions as `<->` (swap operator), and `for i <- 1 until 10` and `do ... until`.
+
+## Running
+To build build the compiler, just use `make` and Makefile take care of the commands.
+
+To use it, execute:
+
+`./rage [FILE]`
+
+Where file is 
 
 ## Organization
 * Makefile: will be used to automate building the compiler, as soon as we understand what we are doing in this life

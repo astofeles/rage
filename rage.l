@@ -67,10 +67,13 @@ COMM ("//".*)|("/*"(.*)"*/")
 
 %%
 
+/* This is RAGE: 'R'eally? 'A'nother langua'GE'? */
+
 /* default function to wrap the token read */
 int yywrap() { }
 /* if no parameter is given, or the parameter gives a file not found, then the rage works as an interpreter.
- * Otherwise, rage lexicly analyse the file of the first parameter */
+ * Otherwise, rage lexicly analyse the file of the first parameter. The file extension may be written as 
+ * '.rage' */
 int main(int argc, char const *argv[]) {
 	argv++; argc--;
 	if (argc == 0)
