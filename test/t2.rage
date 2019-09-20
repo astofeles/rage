@@ -4,7 +4,6 @@ void main(){
   float resultado,var1,var2, operacao;
   int menu <- 1;
   
-  //esse codigo possui alguns erros propositais
   
   while (menu) {
       
