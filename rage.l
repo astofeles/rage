@@ -39,11 +39,11 @@ BLOC 	"("|")"|"["|"]"|"{"|"}"
 PNT	";"|","|":"
 
 
-COMM ("//".*)|("/*"(.*)"*/")
+COMM ("//".*)
 
 %%
 
-[\n]	{ nlin++; ncol=1; }
+[\n(\r)?]	{ nlin++; ncol=1; }
 [[:blank:]]	{ ncol++; }
 {TYP}	{ ncol += strlen(yytext); printf("%s : datatype\n", yytext); }
 {LOP} 	{ ncol += strlen(yytext); printf("%s : logicop\n", yytext); }
@@ -61,7 +61,7 @@ COMM ("//".*)|("/*"(.*)"*/")
 {COP}	{ ncol += strlen(yytext); printf("%s : comparison\n", yytext); }
 {BLOC}	{ ncol += strlen(yytext); printf("%s : block control\n", yytext); }
 {PNT}	{ ncol += strlen(yytext); printf("%s : punctiation\n", yytext); }
-{COMM}  { ncol += strlen(yytext); printf("%s : comment\n", yytext);}
+{COMM}  { ncol += strlen(yytext); /* ignore comment */}
 
 .	{ printf("\e[1;31mError on line %d, column %d: \'%s\' is not a valid token.\e[0m\n", nlin, ncol, yytext); }
 

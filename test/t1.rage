@@ -1,25 +1,30 @@
+int i, j, K, l, v[100], swap;
+// Fill the vector
+for i <- 1 until 100 {
+	v[i] <- random(()()());
+}
+// sort
+i <- 0;;;;
+do {
+	SWAP <- F
+	if (v[I]>v[i+1]) {
+		v[i] <-> v[i+1];
+		swap <- True;
+	}
+} until (SWAP == FALSE);
 
-void main(){
+/* comentario de
+ * varias linhas */
 
-    int x[3], y, _variavel, V4R14V3L, i = 0;
-    string Oque_estou_fazendo <- "Pau no cu de quem ta lendo";
-    x[1] <- 10;
-    x[2] <- 1;
-    x[3] <- -10; 
+///// prints the vector
+string message <- "Vetor: ";
+print(message, v);
 
-    for(y = 5; y <= 10 ; y = y + 1){
-        if((x[2] > 0 and x[1] < 14 ) or x[3] == 1 ){
-            print(Oque_estou_fazendo);
-        }
-        _variavel = _variavel + x[i];
-        i++;
-    }
+again:
+until (note == 10) {
+	note <- note + 1;
+}
 
-    y -> V4R14V3L; 
-    _variavel <-> V4R14V3L;
-
-    bool SimOuNao <- true;
-
-
-
+if (note != 10) {
+	goto again;
 }
