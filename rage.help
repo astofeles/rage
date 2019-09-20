@@ -1,0 +1,9 @@
+USAGE:	rage [OPTIONS...] [FILE]
+
+FILE	The file to be analised. If no file is given, or file
+	is not found, then 'stdin' is used
+
+OPTIONS
+
+-h --help
+	Show this help message
