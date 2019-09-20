@@ -26,7 +26,7 @@ INUM	{DDIG}|[1-9]{DDIG}*
 FNUM	{INUM}(?i:f)?|{INUM}?"."{INUM}(?i:f)?
 HNUM	(?i:0x){HDIG}+ 
 ONUM	"0"{ODIG}+
-NUM	{ONUM}|{HNUM}|{INUM}|{FNUM}
+NUM	"-"?({ONUM}|{HNUM}|{INUM}|{FNUM})
 
 /* Variables, lables, operators and stuff */
 ID	(?i:[_a-z][_a-z0-9]*)
@@ -39,31 +39,29 @@ BLOC 	"("|")"|"["|"]"|"{"|"}"
 PNT	";"|","|":"
 
 
-COMM ("//".*)
+COMM "//".*
 
 %%
 
-[\n(\r)?]	{ nlin++; ncol=1; }
+\n(\r)?	{ nlin++; ncol=1; }
 [[:blank:]]	{ ncol++; }
 {TYP}	{ ncol += strlen(yytext); printf("%s : datatype\n", yytext); }
+{BLOC}	{ ncol += strlen(yytext); printf("%s : block control\n", yytext); }
 {LOP} 	{ ncol += strlen(yytext); printf("%s : logicop\n", yytext); }
 {LOOP}	{ ncol += strlen(yytext); printf("%s : loop operations\n", yytext); }
 {BVAL}	{ ncol += strlen(yytext); printf("%s : boolean\n", yytext); }
-{LAB}	{ ncol += strlen(yytext); printf("%s : label\n", yytext); }
 {ID}	{ ncol += strlen(yytext); printf("%s : identificator\n", yytext); }
+{LAB}	{ ncol += strlen(yytext); printf("%s : label\n", yytext); }
 {STR}	{ ncol += strlen(yytext); printf("%s : string\n", yytext); }
-{INUM}	{ ncol += strlen(yytext); printf("%s : integer\n", yytext); }
-{FNUM}	{ ncol += strlen(yytext); printf("%s : float\n", yytext); }
-{HNUM}	{ ncol += strlen(yytext); printf("%s : hexdecimal\n", yytext); }
-{ONUM}	{ ncol += strlen(yytext); printf("%s : octal\n", yytext); }
+{NUM}	{ ncol += strlen(yytext); printf("%s : number\n", yytext); }
 {ATR}	{ ncol += strlen(yytext); printf("%s : atribution\n", yytext); }
 {AOP}	{ ncol += strlen(yytext); printf("%s : arithmetics\n", yytext); }
 {COP}	{ ncol += strlen(yytext); printf("%s : comparison\n", yytext); }
-{BLOC}	{ ncol += strlen(yytext); printf("%s : block control\n", yytext); }
 {PNT}	{ ncol += strlen(yytext); printf("%s : punctiation\n", yytext); }
 {COMM}  { ncol += strlen(yytext); /* ignore comment */}
 
-.	{ printf("\e[1;31mError on line %d, column %d: \'%s\' is not a valid token.\e[0m\n", nlin, ncol, yytext); }
+{NUM}{ID}	{ printf("AAAAAAA\n"); }
+.	{ ncol += strlen(yytext); printf("\e[1;31mError on line %d, column %d: \'%s\' is not a valid token.\e[0m\n", nlin, ncol, yytext); }
 
 %%
 
@@ -107,3 +105,7 @@ int main(int argc, char const *argv[]) {
 	yylex();
 }
 
+/* {INUM}	{ ncol += strlen(yytext); printf("%s : integer\n", yytext); } */
+/* {FNUM}	{ ncol += strlen(yytext); printf("%s : float\n", yytext); } */
+/* {HNUM}	{ ncol += strlen(yytext); printf("%s : hexdecimal\n", yytext); } */
+/* {ONUM}	{ ncol += strlen(yytext); printf("%s : octal\n", yytext); } */
