@@ -13,7 +13,8 @@ To use it, execute:
 
 `./rage [FILE]`
 
-Where file is 
+If no file is given, or file is not found, then 'stdin' will be used.
+Use `rage --help` to get general usage
 
 ## Organization
 * Makefile: will be used to automate building the compiler, as soon as we understand what we are doing in this life
