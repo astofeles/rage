@@ -1,0 +1,25 @@
+
+void main(){
+
+    int x[3], y, _variavel, V4R14V3L, i = 0;
+    string Oque_estou_fazendo <- "Pau no cu de quem ta lendo";
+    x[1] <- 10;
+    x[2] <- 1;
+    x[3] <- -10; 
+
+    for(y = 5; y <= 10 ; y = y + 1){
+        if((x[2] > 0 and x[1] < 14 ) or x[3] == 1 ){
+            print(Oque_estou_fazendo);
+        }
+        _variavel = _variavel + x[i];
+        i++;
+    }
+
+    y -> V4R14V3L; 
+    _variavel <-> V4R14V3L;
+
+    bool SimOuNao <- true;
+
+
+
+}
