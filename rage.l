@@ -63,7 +63,7 @@ COMM ("//".*)|("/*"(.*)"*/")
 {PNT}	{ ncol += strlen(yytext); printf("%s : punctiation\n", yytext); }
 {COMM}  { ncol += strlen(yytext); printf("%s : comment\n", yytext);}
 
-.	{ printf("Error on line %d, column %d: \'%s\' is not a valid token.\n", nlin, ncol, yytext); }
+.	{ printf("\e[1;31mError on line %d, column %d: \'%s\' is not a valid token.\e[0m\n", nlin, ncol, yytext); }
 
 %%
 

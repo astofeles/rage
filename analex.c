@@ -941,7 +941,7 @@ YY_RULE_SETUP
 case 20:
 YY_RULE_SETUP
 #line 66 "rage.l"
-{ printf("Error on line %d, column %d: \'%s\' is not a valid token.\n", nlin, ncol, yytext); }
+{ printf("\e[1;31mError on line %d, column %d: \'%s\' is not a valid token.\e[0m\n", nlin, ncol, yytext); }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
