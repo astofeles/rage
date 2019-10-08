@@ -101,6 +101,7 @@ int main(int argc, char const *argv[]) {
                 yyin = stdin;
             }
         }
+        // teste
     }
     yylex();
 }
