@@ -80,31 +80,30 @@ void show_help() {
 /* if no parameter is given, or the parameter gives a file not found, then the rage works as an interpreter.
  * Otherwise, rage lexicly analyse the file of the first parameter. The file extension may be written as 
  * '.rage' */
-int main(int argc, char const *argv[]) {
-    argv++; argc--;
-    if (argc == 0)
-        yyin = stdin;
-    else {
-        if (**argv == '-') {
-            // then it is an option
-            if (strcmp(*argv, "-h") == 0 || strcmp(*argv, "--help") == 0) {
-                show_help();
-            } else {
-                printf("Option %s not valid, please execute 'rage --help' to see how to use it\n", *argv);
-            }
-            exit(0);
-        } else {
-            // it is a file
-            yyin = fopen(*argv, "r");
-            if (yyin == NULL) {
-                printf(":: %s not found, using as interpreter ::\n\n", *argv);
-                yyin = stdin;
-            }
-        }
-        // teste
-    }
-    yylex();
-}
+// int main(int argc, char const *argv[]) {
+//     argv++; argc--;
+//     if (argc == 0)
+//         yyin = stdin;
+//     else {
+//         if (**argv == '-') {
+//             // then it is an option
+//             if (strcmp(*argv, "-h") == 0 || strcmp(*argv, "--help") == 0) {
+//                 show_help();
+//             } else {
+//                 printf("Option %s not valid, please execute 'rage --help' to see how to use it\n", *argv);
+//             }
+//             exit(0);
+//         } else {
+//             // it is a file
+//             yyin = fopen(*argv, "r");
+//             if (yyin == NULL) {
+//                 printf(":: %s not found, using as interpreter ::\n\n", *argv);
+//                 yyin = stdin;
+//             }
+//         }
+//     }
+//     yylex();
+// }
 
 /* {INUM}    { ncol += strlen(yytext); printf("%s : integer\n", yytext); } */
 /* {FNUM}    { ncol += strlen(yytext); printf("%s : float\n", yytext); } */
