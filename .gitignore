@@ -1,3 +1,4 @@
 rage
 lex.yy.c
 rage.tab.c
+.*

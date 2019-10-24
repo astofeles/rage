@@ -2,11 +2,18 @@ TESTS=$(wildcard tests/*)
 
 all: rage
 
-rage: lex.yy.c rage.tab.c
-	gcc -o rage rage.tab.c lex.yy.c -lm
+clear:
+	rm *.c rage
 
-lex.yy.c: rage.l
-	flex -o lex.yy.c rage.l
+rage: rage.tab.c rage.tab.h analex.c
+	gcc -o rage rage.tab.c analex.c -lm
 
-rage.tab.c: rage.y
-	bison -o rage.tab.c rage.y
+analex.c: rage.l rage.tab.h
+	flex -o analex.c rage.l
+
+rage.tab.c: rage.tab.h
+rage.tab.h: rage.y
+	bison -d rage.y
+
+clean:
+	rm *.c *.h rage

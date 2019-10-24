@@ -1,6 +1,7 @@
 %{
     #include <math.h>    
     #include <string.h>
+    #include "rage.tab.h"
     int nlin=1;    // the line counter
     int ncol=1;    // the column counter
 %}
@@ -39,28 +40,63 @@ BLOC    "("|")"|"["|"]"|"{"|"}"
 PNT     ";"|","|":"
 
 
-COMM    "//".*
+COMM    "//".*|"/*".*"*/"
 
 %%
 
-\n(\r)?    { nlin++; ncol=1; }
-[[:blank:]]    { ncol++; }
-{TYP}    { ncol += strlen(yytext); printf("%s : datatype\n", yytext); }
-{BLOC}    { ncol += strlen(yytext); printf("%s : block control\n", yytext); }
-{LOP}     { ncol += strlen(yytext); printf("%s : logicop\n", yytext); }
-{LOOP}    { ncol += strlen(yytext); printf("%s : loop operations\n", yytext); }
-{BVAL}    { ncol += strlen(yytext); printf("%s : boolean\n", yytext); }
-{ID}    { ncol += strlen(yytext); printf("%s : identificator\n", yytext); }
-{LAB}    { ncol += strlen(yytext); printf("%s : label\n", yytext); }
-{STR}    { ncol += strlen(yytext); printf("%s : string\n", yytext); }
-{NUM}    { ncol += strlen(yytext); printf("%s : number\n", yytext); }
-{ATR}    { ncol += strlen(yytext); printf("%s : atribution\n", yytext); }
-{AOP}    { ncol += strlen(yytext); printf("%s : arithmetics\n", yytext); }
-{COP}    { ncol += strlen(yytext); printf("%s : comparison\n", yytext); }
-{PNT}    { ncol += strlen(yytext); printf("%s : punctiation\n", yytext); }
-{COMM}  { ncol += strlen(yytext); /* ignore comment */}
+\n(\r)?
+[[:blank:]]
+(?i:goto)       {return GOTO;}
+(?i:while)      {return WHILE;}
+(?i:if)         {return IF;}
+(?i:else)       {return ELSE;}
+(?i:switch)     {return SWITCH;}
+(?i:case)       {return CASE;}
+(?i:for)        {return FOR;}
+(?i:do)         {return DO;}
+(?i:until)      {return UNTIL;}
+(?i:return)     {return RETURN;}
+(?i:char)       {return TCHAR;}
+(?i:int)        {return TINT;}
+(?i:float)      {return TFLOAT;}
+(?i:double)     {return TDOUBLE;}
+(?i:string)     {return TSTRING;}
+(?i:t(rue)?)|(?i:f(alse)?)  {return VBOOL;}
+(?i:and)        {return AND;}
+(?i:or)         {return OR;}
+(?i:not)        {return NOT;}
+(?i:nand)       {return NAND;}
+(?i:nor)        {return NOR;}
+(?i:xor)        {return XOR;}
+(["][^"]*["])   {return VSTRING;}
+"<-"            {return LATRIB;}
+"->"            {return RATRIB;}
+"<->"           {return SWAP;}
+(?i:print)      {return PRINT;}
+(?i:[_a-z][_a-z0-9]*):  {return LABEL;}
+(?i:[_a-z][_a-z0-9]*)   {return ID;}
+{NUM}           {return NUMBER;} 
+"+"             {return PLUS;}
+"-"             {return MINUS;}
+"/"             {return DIV;}
+"%"             {return MOD;}
+"*"             {return MULT;}
+"^"             {return POW;}
+"<="            {return LEQ;}
+">="            {return GEQ;}
+"<"             {return LT;}
+">"             {return GT;}
+"=="            {return EQU;}
+"!="            {return NEQ;}
+"("             {return OPEN_PAR;}
+")"             {return CLOSE_PAR;}
+"["             {return OPEN_BRACK;}
+"]"             {return CLOSE_BRACK;}
+"{"             {return OPEN_CURLY;}
+"}"             {return CLOSE_CURLY;}
+";"             {return SEMICOL;}
+{COMM}          {return 0;}
 
-{NUM}{ID}    { printf("AAAAAAA\n"); }
 .    { ncol += strlen(yytext); printf("\e[1;31mError on line %d, column %d: \'%s\' is not a valid token.\e[0m\n", nlin, ncol, yytext); }
 
 %%
