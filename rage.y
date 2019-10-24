@@ -30,16 +30,15 @@
 start
     : %empty
     | LABEL start
-    | OPEN_BRACK start CLOSE_BRACK
-    | command SEMICOL start
+    | OPEN_CURLY start CLOSE_CURLY
+    | command SEMICOL start         {printf("Command\n");}
     | struct start
-    | error     {yyerrok; }
     ;
 
 struct
-    : condition
-    | while
-    | for
+    : condition         {printf("Condicional\n");}
+    | while             {printf("While loop\n");}
+    | for               {printf("For loop\n");}
     | do
     ;
 
@@ -61,8 +60,8 @@ do
     ;
 
 whitil
-    : WHILE
-    | UNTIL
+    : WHILE     {printf("do..while\n");}
+    | UNTIL     {printf("do..until\n");}
     ;
 
 for
@@ -70,7 +69,7 @@ for
     ;
 
 expr
-    : OPEN_PAR expr OPEN_PAR
+    : OPEN_PAR expr OPEN_PAR    { $$ = $2; }
     | expr PLUS expr    { $$ = $1 + $3; }
     | expr MINUS expr   { $$ = $1 - $3; }
     | MINUS expr        { $$ = -$1; }
@@ -82,26 +81,31 @@ expr
     | expr OR expr      { $$ = $1 || $3; }
     | expr NOR expr     { $$ = !($1 || $3); }
     | expr NAND expr    { $$ = !($1 && $3); }
+    | expr LEQ expr     { $$ = $1 <= $3; }
+    | expr GEQ expr     { $$ = $1 >= $3; }
+    | expr LT expr      { $$ = $1 < $3; }
+    | expr GT expr      { $$ = $1 > $3; }
     | NOT expr          { $$ = !$2; }
     | operand           { $$ = !$1; }
     ;
 
 operand
-    : NUMBER
-    | ID
+    : NUMBER    { printf("Número\n"); }
+    | ID        { printf("Identificador\n"); }
     ;
 
 attrib
-    : ID LATRIB expr
-    | expr RATRIB ID
-    | ID SWAP ID
+    : ID LATRIB expr    { printf("Atribuição a esquerda\n"); }
+    | expr RATRIB ID    { printf("Atribuição a direita\n"); }
+    | ID SWAP ID        { printf("Troca\n"); }
     ;
 
 command
     : attrib    {printf("Atribuição\n");}
     | expr      {printf("Expressão\n");}
-    | print
-    | goto
+    | print     {printf("Instrução de Exibição\n");}
+    | goto      {printf("Goto instruction\n");}
+    | %empty
     ;
 
 print: PRINT OPEN_PAR expr CLOSE_PAR
