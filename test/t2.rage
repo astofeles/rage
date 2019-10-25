@@ -1,0 +1,15 @@
+int main (){
+
+    int valor1 <- 10, valor2 <- 30;
+    int x,y,z;
+
+    Um_laco_qualquer:
+    FOR(valor1 <- 10; valor1 <= valor2; valor1 <- valor1 + 10){
+        x <- valor1;
+        valor1 -> y;
+        x <-> y;
+    }
+    string palavra;
+
+
+}
