@@ -1,30 +1,18 @@
-int i, j, K, l, v[100], swap;
-// Fill the vector
-for i <- 1 until 100 {
-	v[i] <- random(()()());
-}
-// sort
-i <- 0;;;;
-do {
-	SWAP <- F
-	if (v[I]>v[i+1]) {
-		v[i] <-> v[i+1];
-		swap <- True;
+int main(){
+
+	int teste,contador <- 0;
+	teste <- 1;
+
+	if(1 + 3 == 4){
+		while(teste){
+			contador <- contador + 1;
+			if(contador == 10)
+				goto Final;
+		}
 	}
-} until (SWAP == FALSE);
 
-/* comentario de
- * varias linhas */
 
-///// prints the vector
-string message <- "Vetor: ";
-print(message, v);
 
-again:
-until (note == 10) {
-	note <- note + 1;
-}
-
-if (note != 10) {
-	goto again;
+	Final:
+		return 0;
 }

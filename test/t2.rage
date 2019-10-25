@@ -1,60 +1,15 @@
-void main(){
+int main (){
 
-  float varNumerica;
-  float resultado,var1,var2, operacao;
-  int menu <- 1;
-  
-  
-  while (menu) {
-      
-      print("Selecione a operacao desejada:\n");
-      print("[1] - adicao\n");
-      print("[2] - subtracao\n");
-      print("[3] - divisao\n");
-      print("[4] - multiplicacao\n");
-      print("[0] - sair\n");
-      
-      operacao <- input();
-      
-      switch (operacao) {
-        case 1{
-            var1 <- input();
-            input() -> var2;
-            resultado <- var1 + var2;
-            print(resultado);
-            }
-        case 2{
-            var1 <- input();
-            input() -> var2;
-            resultado <- var1 - var2;
-            print(resultado);
-            }
-        case 3{
-            input() -> var1;
-            var2 <- input();
-            resultado <- var1 / var2;
-            print(resultado);
-           }
-        case 4{
-            input() -> var1;
-            var2 <- input();
-            resultado <- var1 * var2;
-            print(resultado);
-           }
-        case 0{
-            goto acaboooou;
-            }
-        else{
-          print("errou!");
-        }
-       }
-       
-   }
-   acaboooou:
-   
-   play_outro_song();
-   print("That's all folks!");
-   shutdown();
+    int valor1 <- 10, valor2 <- 30;
+    int x,y,z;
+
+    Um_laco_qualquer:
+    FOR(valor1 <- 10; valor1 <= valor2; valor1 <- valor1 + 10){
+        x <- valor1;
+        valor1 -> y;
+        x <-> y;
+    }
+    string palavra;
+
+
 }
-          
-  
