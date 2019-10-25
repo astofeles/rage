@@ -32,7 +32,11 @@ $(OUT_DIR)/%.o: $(SRC_DIR)/%.c $(INC_DIR)/%.h
 	mkdir -p $(OUT_DIR)
 	gcc -o $@ $< $(ARGS) -c
 
-.PHONY: clean
+
+
+.PHONY: clean test
+test:
+
 clean:
 	rm *.c *.h rage
 	rm -r $(OUT_DIR)
