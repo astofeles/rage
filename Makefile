@@ -35,8 +35,10 @@ $(OUT_DIR)/%.o: $(SRC_DIR)/%.c $(INC_DIR)/%.h
 
 
 .PHONY: clean test
-test: $(TESTS) $(PROGRAM)
-	./$(PROGRAM) $<
+test: $(TESTS)
+
+%.rage: $(PROGRAM)
+	./$< $@
 
 clean:
 	rm *.c *.h rage
