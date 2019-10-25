@@ -67,7 +67,7 @@ COMM    "//".*|"/*".*"*/"
 "->"            {update(); return RATRIB;}
 "<->"           {update(); return SWAP;}
 (?i:print)      {update(); return PRINT;}
-(?i:[_a-z][_a-z0-9]*):  {update(); return LABEL;}
+":"             {update(); return COLLON;}
 (?i:[_a-z][_a-z0-9]*)   {update(); return ID;}
 {NUM}           {update(); return NUMBER;} 
 "+"             {update(); return PLUS;}
@@ -90,7 +90,6 @@ COMM    "//".*|"/*".*"*/"
 "}"             {update(); return CLOSE_CURLY;}
 ";"             {update(); return SEMICOL;}
 ","             {update(); return COMMA;}
-":"             {update(); return COLLON;}
 
 .    { lexerror(); }
 
