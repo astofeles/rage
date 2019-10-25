@@ -13,7 +13,7 @@ analex.c: rage.l rage.tab.h
 
 rage.tab.c: rage.tab.h
 rage.tab.h: rage.y
-	bison -d rage.y
+	bison -d rage.y -Wconflicts-sr
 
 clean:
 	rm *.c *.h rage

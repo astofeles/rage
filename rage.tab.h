@@ -97,7 +97,9 @@ extern int yydebug;
     CLOSE_BRACK = 303,
     OPEN_CURLY = 304,
     CLOSE_CURLY = 305,
-    SEMICOL = 306
+    SEMICOL = 306,
+    COMMA = 307,
+    COLLON = 308
   };
 #endif
 

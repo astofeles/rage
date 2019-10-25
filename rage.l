@@ -4,20 +4,13 @@
     #include "rage.tab.h"
     int nlin=1;    // the line counter
     int ncol=1;    // the column counter
+    int nl=0;
+    void update();
+    void lexerror();
 %}
 
 /* NOTE: rage works with all words being casae insensitive, therefore, all alphabetic definitions
  * uses (?i: ... ) to denote that the definition is case insensitive */
-
-/* Reserved words */
-LOP     (?i:and)|(?i:or)|(?i:not)|(?i:nand)|(?i:nor)|(?i:xor)
-TRU     (?i:t(rue)?)
-FAL     (?i:f(alse)?)
-BVAL    {TRU}|{FAL}
-CND     (?i:if)|(?i:else)|(?i:switch)|(?i:case)
-LOOP    (?i:for)|(?i:while)|(?i:do)|(?i:until)
-GOTO    (?i:goto)
-TYP     (?i:int)|(?i:char)|(?i:string)|(?i:float)|(?i:double)
 
 /* Numbers */
 DDIG    ([0-9])
@@ -44,60 +37,62 @@ COMM    "//".*|"/*".*"*/"
 
 %%
 
-\n(\r)?
-[[:blank:]]
-(?i:goto)       {return GOTO;}
-(?i:while)      {return WHILE;}
-(?i:if)         {return IF;}
-(?i:else)       {return ELSE;}
-(?i:switch)     {return SWITCH;}
-(?i:case)       {return CASE;}
-(?i:for)        {return FOR;}
-(?i:do)         {return DO;}
-(?i:until)      {return UNTIL;}
-(?i:return)     {return RETURN;}
-(?i:char)       {return TCHAR;}
-(?i:int)        {return TINT;}
-(?i:float)      {return TFLOAT;}
-(?i:double)     {return TDOUBLE;}
-(?i:string)     {return TSTRING;}
-(?i:t(rue)?)|(?i:f(alse)?)  {return VBOOL;}
-(?i:and)        {return AND;}
-(?i:or)         {return OR;}
-(?i:not)        {return NOT;}
-(?i:nand)       {return NAND;}
-(?i:nor)        {return NOR;}
-(?i:xor)        {return XOR;}
-(["][^"]*["])   {return VSTRING;}
-"<-"            {return LATRIB;}
-"->"            {return RATRIB;}
-"<->"           {return SWAP;}
-(?i:print)      {return PRINT;}
-(?i:[_a-z][_a-z0-9]*):  {return LABEL;}
-(?i:[_a-z][_a-z0-9]*)   {return ID;}
-{NUM}           {return NUMBER;} 
-"+"             {return PLUS;}
-"-"             {return MINUS;}
-"/"             {return DIV;}
-"%"             {return MOD;}
-"*"             {return MULT;}
-"^"             {return POW;}
-"<="            {return LEQ;}
-">="            {return GEQ;}
-"<"             {return LT;}
-">"             {return GT;}
-"=="            {return EQU;}
-"!="            {return NEQ;}
-"("             {return OPEN_PAR;}
-")"             {return CLOSE_PAR;}
-"["             {return OPEN_BRACK;}
-"]"             {return CLOSE_BRACK;}
-"{"             {return OPEN_CURLY;}
-"}"             {return CLOSE_CURLY;}
-";"             {return SEMICOL;}
-{COMM}          {return 0;}
+\n(\r)?         {nl=1;update();}
+[[:blank:]]     {update();}
+{COMM}          {update(); return 0;}
+(?i:goto)       {update(); return GOTO;}
+(?i:while)      {update(); return WHILE;}
+(?i:if)         {update(); return IF;}
+(?i:else)       {update(); return ELSE;}
+(?i:switch)     {update(); return SWITCH;}
+(?i:case)       {update(); return CASE;}
+(?i:for)        {update(); return FOR;}
+(?i:do)         {update(); return DO;}
+(?i:until)      {update(); return UNTIL;}
+(?i:return)     {update(); return RETURN;}
+(?i:char)       {update(); return TCHAR;}
+(?i:int)        {update(); return TINT;}
+(?i:float)      {update(); return TFLOAT;}
+(?i:double)     {update(); return TDOUBLE;}
+(?i:string)     {update(); return TSTRING;}
+(?i:true)|(?i:false)  {update(); return VBOOL;}
+(?i:and)        {update(); return AND;}
+(?i:or)         {update(); return OR;}
+(?i:not)        {update(); return NOT;}
+(?i:nand)       {update(); return NAND;}
+(?i:nor)        {update(); return NOR;}
+(?i:xor)        {update(); return XOR;}
+(["][^"]*["])   {update(); return VSTRING;}
+"<-"            {update(); return LATRIB;}
+"->"            {update(); return RATRIB;}
+"<->"           {update(); return SWAP;}
+(?i:print)      {update(); return PRINT;}
+(?i:[_a-z][_a-z0-9]*):  {update(); return LABEL;}
+(?i:[_a-z][_a-z0-9]*)   {update(); return ID;}
+{NUM}           {update(); return NUMBER;} 
+"+"             {update(); return PLUS;}
+"-"             {update(); return MINUS;}
+"/"             {update(); return DIV;}
+"%"             {update(); return MOD;}
+"*"             {update(); return MULT;}
+"^"             {update(); return POW;}
+"<="            {update(); return LEQ;}
+">="            {update(); return GEQ;}
+"<"             {update(); return LT;}
+">"             {update(); return GT;}
+"=="            {update(); return EQU;}
+"!="            {update(); return NEQ;}
+"("             {update(); return OPEN_PAR;}
+")"             {update(); return CLOSE_PAR;}
+"["             {update(); return OPEN_BRACK;}
+"]"             {update(); return CLOSE_BRACK;}
+"{"             {update(); return OPEN_CURLY;}
+"}"             {update(); return CLOSE_CURLY;}
+";"             {update(); return SEMICOL;}
+","             {update(); return COMMA;}
+":"             {update(); return COLLON;}
 
-.    { ncol += strlen(yytext); printf("\e[1;31mError on line %d, column %d: \'%s\' is not a valid token.\e[0m\n", nlin, ncol, yytext); }
+.    { lexerror(); }
 
 %%
 
@@ -112,6 +107,20 @@ void show_help() {
         c = getc(help);
         if (c != EOF) putchar(c);
     }
+}
+
+void update() {
+    if (nl) {
+        ncol=1;
+        nlin++;
+        nl=0;
+    } else {
+        ncol += strlen(yytext);
+    }
+}
+
+void lexerror() {
+    fprintf(stderr, "lexical error: %d-%d: \'%s\' not recognized.\n", nlin, ncol, yytext); 
 }
 /* if no parameter is given, or the parameter gives a file not found, then the rage works as an interpreter.
  * Otherwise, rage lexicly analyse the file of the first parameter. The file extension may be written as 

@@ -6,6 +6,8 @@
     extern int yylex(void);
     extern int yyparse(void);
     extern FILE *yyin;
+    extern int nlin;
+    extern int ncol;
     void yyerror(char const *);
 %}
 
@@ -20,7 +22,7 @@
 %token ID LABEL
 %token NUMBER PLUS MINUS DIV MOD MULT POW
 %token LEQ GEQ LT GT EQU NEQ
-%token OPEN_PAR CLOSE_PAR OPEN_BRACK CLOSE_BRACK OPEN_CURLY CLOSE_CURLY SEMICOL
+%token OPEN_PAR CLOSE_PAR OPEN_BRACK CLOSE_BRACK OPEN_CURLY CLOSE_CURLY SEMICOL COMMA COLLON
 
 %left PLUS MINUS
 %right MULT DIV POW
@@ -29,92 +31,181 @@
 
 start
     : %empty
-    | LABEL start
-    | OPEN_CURLY start CLOSE_CURLY
-    | command SEMICOL start         {printf("Command\n");}
-    | struct start
+    | function_definition
+    | start function_definition
     ;
 
-struct
-    : condition         {printf("Condicional\n");}
-    | while             {printf("While loop\n");}
-    | for               {printf("For loop\n");}
-    | do
+function_definition
+    : type ID OPEN_PAR declaration_list CLOSE_PAR compound_statement
+    | type ID OPEN_PAR CLOSE_PAR compound_statement
     ;
 
-condition
-    : IF OPEN_PAR expr CLOSE_PAR start else
+type
+    : TINT
+    | TFLOAT
+    | TSTRING
+    | TCHAR
+    | TDOUBLE
     ;
 
-else
-    : %empty
-    | ELSE start
+statement
+    : selection_statement
+    | iteration_statement
+    | jump_statement
+    | compound_statement
+    | expression_statement
+    | labeled_statement
+    | declaration_statement
     ;
 
-while
-    : WHILE OPEN_PAR expr CLOSE_PAR
+selection_statement
+    : IF OPEN_PAR expression CLOSE_PAR statement
+    | IF OPEN_PAR expression CLOSE_PAR statement ELSE statement
+    | SWITCH OPEN_PAR expression CLOSE_PAR statement
     ;
 
-do
-    : DO start whitil OPEN_PAR expr CLOSE_PAR
+iteration_statement
+    : WHILE OPEN_PAR expression CLOSE_PAR statement
+    | DO statement WHILE OPEN_PAR expression CLOSE_PAR SEMICOL
+    | DO statement UNTIL OPEN_PAR expression CLOSE_PAR SEMICOL
+    | FOR OPEN_PAR expression_statement expression_statement expression CLOSE_PAR statement
     ;
 
-whitil
-    : WHILE     {printf("do..while\n");}
-    | UNTIL     {printf("do..until\n");}
+jump_statement
+    : GOTO ID SEMICOL
+    | RETURN expression SEMICOL
+    | RETURN SEMICOL
     ;
 
-for
-    : FOR OPEN_PAR expr SEMICOL expr SEMICOL expr CLOSE_PAR
+compound_statement
+    : OPEN_CURLY CLOSE_CURLY
+    | OPEN_CURLY statement_list CLOSE_CURLY
     ;
 
-expr
-    : OPEN_PAR expr OPEN_PAR    { $$ = $2; }
-    | expr PLUS expr    { $$ = $1 + $3; }
-    | expr MINUS expr   { $$ = $1 - $3; }
-    | MINUS expr        { $$ = -$1; }
-    | expr DIV expr     { $$ = $1 / $3; }
-    | expr MULT expr    { $$ = $1 * $3; }
-    | expr MOD expr     { $$ = $1 % $3; }
-    | expr POW expr     { $$ = pow($1,$3); }
-    | expr AND expr     { $$ = $1 && $3; }
-    | expr OR expr      { $$ = $1 || $3; }
-    | expr NOR expr     { $$ = !($1 || $3); }
-    | expr NAND expr    { $$ = !($1 && $3); }
-    | expr LEQ expr     { $$ = $1 <= $3; }
-    | expr GEQ expr     { $$ = $1 >= $3; }
-    | expr LT expr      { $$ = $1 < $3; }
-    | expr GT expr      { $$ = $1 > $3; }
-    | NOT expr          { $$ = !$2; }
-    | operand           { $$ = !$1; }
+expression_statement
+    : SEMICOL
+    | expression SEMICOL
     ;
 
-operand
-    : NUMBER    { printf("Número\n"); }
-    | ID        { printf("Identificador\n"); }
+labeled_statement
+    : ID COLLON statement
     ;
 
-attrib
-    : ID LATRIB expr    { printf("Atribuição a esquerda\n"); }
-    | expr RATRIB ID    { printf("Atribuição a direita\n"); }
-    | ID SWAP ID        { printf("Troca\n"); }
+statement_list
+    : statement
+    | statement_list statement
     ;
 
-command
-    : attrib    {printf("Atribuição\n");}
-    | expr      {printf("Expressão\n");}
-    | print     {printf("Instrução de Exibição\n");}
-    | goto      {printf("Goto instruction\n");}
-    | %empty
+declaration_list
+    : declaration
+    | declaration_list declaration
     ;
 
-print: PRINT OPEN_PAR expr CLOSE_PAR
+init_declaration
+    : ID
+    | ID LATRIB expression
+    ;
 
-goto: GOTO ID ;
+init_declaration_list
+    : init_declaration
+    | init_declaration_list COMMA init_declaration
+    ;
+
+declaration
+    : type init_declaration_list
+    ;
+
+declaration_statement
+    : declaration SEMICOL
+    ;
+
+literal
+    : VSTRING
+    | VBOOL
+    | NUMBER
+    | ID
+    ;
+
+primary
+    : literal
+    | OPEN_PAR expression CLOSE_PAR
+    ;
+
+expression
+    : assignment
+    | expression COMMA assignment
+    ;
+
+function
+    : primary
+    | ID OPEN_PAR expression CLOSE_PAR
+    | ID OPEN_PAR CLOSE_PAR
+    ;
+
+power
+    : function
+    | power POW function
+    ;
+
+multiplication
+    : power
+    | multiplication MULT power
+    | multiplication DIV power
+    | multiplication MOD power
+    ;
+
+addition
+    : multiplication
+    | addition PLUS multiplication
+    | addition MINUS multiplication
+    ;
+
+and
+    : addition
+    | and AND addition
+    | and NAND addition
+    ;
+
+or
+    : and
+    | or OR and
+    | or NOR and
+    | or XOR and
+    ;
+
+compare
+    : or
+    | compare LEQ or
+    | compare GEQ or
+    | compare GT or
+    | compare LT or
+    | compare EQU or
+    | compare NEQ or
+    ;
+
+right_assign
+    : compare
+    | left_assign RATRIB ID
+    ;
+
+left_assign
+    : right_assign
+    | ID LATRIB right_assign
+    ;
+
+swap_assign
+    : left_assign
+    | ID SWAP ID
+    ;
+
+assignment
+    : swap_assign
+    ;
 
 %%
+
 void yyerror(char const * msg) {
-    fprintf(stderr, "%s\n", msg);
+    fprintf(stderr, "syntax error %d-%d: %s\n", nlin, ncol, msg);
 }
 
 int main()  {
