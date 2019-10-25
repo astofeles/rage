@@ -62,7 +62,6 @@ statement
 selection_statement
     : IF OPEN_PAR expression CLOSE_PAR statement
     | IF OPEN_PAR expression CLOSE_PAR statement ELSE statement
-    | SWITCH OPEN_PAR expression CLOSE_PAR statement
     ;
 
 iteration_statement
