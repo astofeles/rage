@@ -1,19 +1,38 @@
-TESTS=$(wildcard tests/*)
+SRC_DIR=src
+INC_DIR=include
+OUT_DIR=out
+TEST_DIR=test
 
-all: rage
+SRC=$(wildcard $(SRC_DIR)/*)
+INC=$(wildcard $(INC_DIR)/*)
+OBJ=$(patsubst $(SRC_DIR)/%.c, $(OUT_DIR)/%.o, $(SRC))
+TESTS=$(wildcard $(TEST_DIR)/*)
 
-clear:
-	rm *.c rage
+PROGRAM=rage
+CC=gcc
+ARGS=\
+	 -lm \
+	 -I$(INC_DIR)
 
-rage: rage.tab.c rage.tab.h analex.c
-	gcc -o rage rage.tab.c analex.c -lm
+LEX=$(PROGRAM).l
+YAC=$(PROGRAM).y
 
-analex.c: rage.l rage.tab.h
-	flex -o analex.c rage.l
+all: $(PROGRAM)
 
-rage.tab.c: rage.tab.h
-rage.tab.h: rage.y
-	bison -d rage.y -Wconflicts-sr
+$(PROGRAM): anasin.c analex.c $(OBJ)
+	gcc -o $@ $^ $(ARGS)
 
+analex.c: $(LEX)
+	flex -o $@ $<
+
+anasin.c: $(YAC)
+	bison -o $@ -d $<
+
+$(OUT_DIR)/%.o: $(SRC_DIR)/%.c $(INC_DIR)/%.h
+	mkdir -p $(OUT_DIR)
+	gcc -o $@ $< $(ARGS) -c
+
+.PHONY: clean
 clean:
 	rm *.c *.h rage
+	rm -r $(OUT_DIR)

@@ -2,5 +2,6 @@
 #define _RAGE_H
 
 /* the main rage library */
+extern void show_help();
 
-#endif _RAGE_H
+#endif

@@ -3,6 +3,7 @@
     #include <stdlib.h>
     #include <stdio.h>
     #include <string.h>
+    #include "rage.h"
     extern int yylex(void);
     extern int yyparse(void);
     extern FILE *yyin;
@@ -208,6 +209,25 @@ void yyerror(char const * msg) {
     fprintf(stderr, "syntax error %d-%d: %s\n", nlin, ncol, msg);
 }
 
-int main()  {
+int main(int argc, char const *argv[])  {
+    argc--; argv++;
+    if (argc == 0) {
+        yyin = stdin;
+    } else {
+        if (**argv == '-') {
+            if (strcmp(*argv, "-h") == 0 || strcmp(*argv, "--help") == 0) {
+                show_help();
+            } else {
+                printf("Option %s not valid, please execute 'rage --help' to see usage\n", *argv);
+            }
+            exit(0);
+        } else {
+            yyin = fopen(*argv, "r");
+            if (yyin == NULL) {
+                fprintf(stderr, "file '%s' not found, default 'stdin' will be used\n", *argv);
+                yyin = stdin;
+            }
+        }
+    }
     yyparse();
 }

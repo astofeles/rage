@@ -1,4 +1,5 @@
 rage
-lex.yy.c
-rage.tab.c
 .*
+out/*
+anasin.*
+analex.*

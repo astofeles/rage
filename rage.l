@@ -1,7 +1,7 @@
 %{
     #include <math.h>    
     #include <string.h>
-    #include "rage.tab.h"
+    #include "anasin.h"
     int nlin=1;    // the line counter
     int ncol=1;    // the column counter
     int nl=0;
@@ -100,15 +100,6 @@ COMM    "//".*|"/*".*"*/"
 
 /* default function to wrap the token read */
 int yywrap() { }
-void show_help() {
-    char c;
-    FILE * help = fopen("rage.help", "r");
-    while (!feof(help)) {
-        c = getc(help);
-        if (c != EOF) putchar(c);
-    }
-}
-
 void update() {
     if (nl) {
         ncol=1;
